@@ -14,3 +14,7 @@
   display: table-cell;
   width: 100px;
 }
+
+.input-box {
+  display: inline-block
+}

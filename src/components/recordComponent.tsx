@@ -11,6 +11,7 @@ type RecordComponentProps = {
 
 type RecordComponentState = {
   records: TimeSeriesBalance[];
+  file: File | null;
 }
 
 class RecordComponent extends React.Component<RecordComponentProps, RecordComponentState> {
@@ -21,7 +22,7 @@ class RecordComponent extends React.Component<RecordComponentProps, RecordCompon
 
   constructor(props: RecordComponentProps) {
     super(props);
-    this.state = { records: []};
+    this.state = { records: [], file: null };
     this.recordApi = new RecordApi();
     this.recordApi.getTimeSeriesBalanceAll('YEN', 0).then((data) => {
       this.setState( {records: data.data});
@@ -93,13 +94,26 @@ class RecordComponent extends React.Component<RecordComponentProps, RecordCompon
 
           </Form.Row>
         </Form>
-        <Row>
+        <Form className="file-upload">
+          <Form.Row>
+            <Col md={12}>
+              <div>
+                <Form.Label>Record File Upload</Form.Label>
+              </div>
+              <div className="input-box">
+                <Form.Control type="file" onChange={this.onFileChange}/>
+              </div>
+              <Button variant="outline-success" onClick={this.onFileUpload}>Upload</Button>
+            </Col>
+          </Form.Row>
+        </Form>
+        <Row className="mt-5">
           <Col>
             <div>
             <label>Time series balance (chart)</label>
               <Line data={this.chartData} options={this.chartOptions}/>
             </div>
-            <label>Time series balance (table)</label>
+            <label className="mt-5">Time series balance (table)</label>
             <ListGroup>
               {this.state.records && this.state.records.map(record => {
                 return (
@@ -114,6 +128,39 @@ class RecordComponent extends React.Component<RecordComponentProps, RecordCompon
         </Row>
       </Container>
     );
+  }
+
+  onFileChange = (event: any) => {
+    this.setState({ file: event.target.files[0] });
+  }
+
+  onFileUpload = (event: any) => {
+    if (!this.state.file) {
+      return;
+    }
+    console.log(this.state.file.name);
+    if (this.state.file.name.endsWith('.csv')) {
+      this.recordApi.postRecordsFromCsv('ZAIM', this.state.file).then(
+        res => {
+          console.log(res.data);
+        }, 
+        error => {
+          console.log(error);
+        }
+      );
+    } else if (this.state.file.name.endsWith('.xlsx')) {
+      this.recordApi.postRecordsFromXlsx(this.state.file).then(
+        res => {
+          console.log(res.data);
+        }, 
+        error => {
+          console.log(error);
+        }
+      );
+    } else {
+      console.log('unsupported file type');
+      return;
+    }
   }
 }
 

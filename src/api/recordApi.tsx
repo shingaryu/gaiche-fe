@@ -17,4 +17,23 @@ export default class RecordApi {
       params: { baseCurrency, initialAmount }
     })
   }
+
+  public postRecordsFromCsv(csvType: string, file: File): Promise<AxiosResponse<any[]>> {
+    const formData = new FormData();
+    formData.append('csvType', csvType);
+    formData.append('file', file);
+    return axios.post<TimeSeriesBalance[]>(`${baseUrl}/records/csv`, 
+      formData,
+      { headers: { 'content-type': 'multipart/form-data' } }
+    );
+  }
+
+  public postRecordsFromXlsx(file: File): Promise<AxiosResponse<any[]>> {
+    const formData = new FormData();
+    formData.append('file', file);
+    return axios.post<TimeSeriesBalance[]>(`${baseUrl}/records/xlsx`, 
+      formData,
+      { headers: { 'content-type': 'multipart/form-data' } }
+    );
+  }
 }

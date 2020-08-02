@@ -4,12 +4,15 @@ import TimeSeriesBalance from "../models/TimeSeriesBalance";
 import RecordApi from "../api/recordApi";
 import './recordComponent.css';
 import {Line} from 'react-chartjs-2';
+import { useAuth0 } from "../services/react-auth0-spa";
+import User from "../models/User";
 
 type RecordComponentProps = {
-
+  user: User
 }
 
 type RecordComponentState = {
+  user: any;
   initialAmount: string;
   records: TimeSeriesBalance[];
   file: File | null;
@@ -23,7 +26,10 @@ class RecordComponent extends React.Component<RecordComponentProps, RecordCompon
 
   constructor(props: RecordComponentProps) {
     super(props);
-    this.state = { initialAmount: '1127098', records: [], file: null };
+    // const { user } = useAuth0();
+    const user = null;
+    this.state = { user: user, initialAmount: '1127098', records: [], file: null };
+    console.log(user);
     this.recordApi = new RecordApi();
     this.updateTimeSeries();
   }

@@ -5,9 +5,12 @@ import RecordComponent from './components/recordComponent';
 import HeaderComponent from './components/headerComponent';
 import { useAuth0 } from "./services/react-auth0-spa";
 import NavBar from "./components/navBarComponent";
+import UserApi from './api/userApi';
 
 function App() {
-  const { loading, isAuthenticated } = useAuth0();
+  const { loading, isAuthenticated, user } = useAuth0();
+  console.log(user)
+  const userApi = new UserApi();
 
   if (loading) {
     return (
@@ -23,13 +26,16 @@ function App() {
       </div>
     );
   } else {
+    userApi.getUser(user.)
+
+
     return (
       <div>
         <header>
           <NavBar />
           <HeaderComponent/>
         </header>
-        <RecordComponent/>
+        <RecordComponent user={user}/>
       </div>
     );
   }

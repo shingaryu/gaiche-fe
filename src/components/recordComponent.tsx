@@ -18,8 +18,6 @@ type RecordComponentState = {
 class RecordComponent extends React.Component<RecordComponentProps, RecordComponentState> {
   state: RecordComponentState;
   recordApi: RecordApi;
-  chartData: any;
-  chartOptions: any;
 
   constructor(props: RecordComponentProps) {
     super(props);
@@ -29,8 +27,7 @@ class RecordComponent extends React.Component<RecordComponentProps, RecordCompon
   }
 
   render() {
-    this.chartData = {
-      // labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+    const chartData = {
       datasets: [
         {
           label: 'balance',
@@ -56,7 +53,7 @@ class RecordComponent extends React.Component<RecordComponentProps, RecordCompon
       ]
     };
   
-    this.chartOptions = {
+    const chartOptions = {
       scales: {
         xAxes: [{
           type: 'time',
@@ -108,7 +105,7 @@ class RecordComponent extends React.Component<RecordComponentProps, RecordCompon
           <Col>
             <div>
             <label>Time series balance (chart)</label>
-              <Line data={this.chartData} options={this.chartOptions}/>
+              <Line data={chartData} options={chartOptions}/>
             </div>
             <label className="mt-5">Time series balance (table)</label>
             <ListGroup>

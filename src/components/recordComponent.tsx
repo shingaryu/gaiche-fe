@@ -63,7 +63,7 @@ class RecordComponent extends React.Component<RecordComponentProps, RecordCompon
         }
         }]
       }
-    }  
+    }
 
     return (
       <Container fluid>
@@ -108,16 +108,18 @@ class RecordComponent extends React.Component<RecordComponentProps, RecordCompon
               <Line data={chartData} options={chartOptions}/>
             </div>
             <label className="mt-5">Time series balance (table)</label>
-            <ListGroup>
-              {this.state.records && this.state.records.map(record => {
-                return (
-                  <ListGroup.Item>
-                    <span className="date">{record.date}</span>
-                    <span className="balance">{record.balance}</span>
-                  </ListGroup.Item> 
-                )
-              })}
-            </ListGroup>
+            <div className="table-area">
+              <ListGroup>
+                {this.state.records && this.state.records.concat().reverse().map((record, i) => {
+                  return (
+                    <ListGroup.Item key={"t-i-" + i.toString()}>
+                      <span className="date">{record.date}</span>
+                      <span className="balance">{record.balance}</span>
+                    </ListGroup.Item>
+                  )
+                })}
+              </ListGroup>
+            </div>
           </Col>
         </Row>
       </Container>

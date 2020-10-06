@@ -18,3 +18,8 @@
 .input-box {
   display: inline-block
 }
+
+.table-area {
+  height: 400px;
+  overflow-y: auto;
+}

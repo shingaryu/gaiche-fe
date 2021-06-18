@@ -78,7 +78,7 @@ class RecordComponent extends React.Component<RecordComponentProps, RecordCompon
                   return (
                     <ListGroup.Item key={"t-i-" + i.toString()}>
                       <span className="date">{record.date}</span>
-                      <span className="balance">{record.balance}</span>
+                      <span className="balance">{record.balance.toFixed(0)}</span>
                     </ListGroup.Item>
                   )
                 })}

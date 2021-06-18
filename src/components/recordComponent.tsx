@@ -3,7 +3,8 @@ import { Button, ListGroup, Form, FormControl, Container, Row, Col } from 'react
 import TimeSeriesBalance from "../models/TimeSeriesBalance";
 import RecordApi from "../api/recordApi";
 import './recordComponent.css';
-import {Line} from 'react-chartjs-2';
+import { ChartComponent } from "./chartComponent";
+import moment from "moment";
 
 type RecordComponentProps = {
 
@@ -27,43 +28,6 @@ class RecordComponent extends React.Component<RecordComponentProps, RecordCompon
   }
 
   render() {
-    const chartData = {
-      datasets: [
-        {
-          label: 'balance',
-          fill: false,
-          lineTension: 0.1,
-          backgroundColor: 'rgba(75,192,192,0.4)',
-          borderColor: 'rgba(75,192,192,1)',
-          borderCapStyle: 'butt',
-          borderDash: [],
-          borderDashOffset: 0.0,
-          borderJoinStyle: 'miter',
-          pointBorderColor: 'rgba(75,192,192,1)',
-          pointBackgroundColor: '#fff',
-          pointBorderWidth: 1,
-          pointHoverRadius: 5,
-          pointHoverBackgroundColor: 'rgba(75,192,192,1)',
-          pointHoverBorderColor: 'rgba(220,220,220,1)',
-          pointHoverBorderWidth: 2,
-          pointRadius: 1,
-          pointHitRadius: 10,
-          data: this.state.records.map(record => { return { t: record.date, y: record.balance }})
-        }
-      ]
-    };
-  
-    const chartOptions = {
-      scales: {
-        xAxes: [{
-          type: 'time',
-          time: {
-            min: this.state.records.length > 0 && this.state.records[0].date,
-            unit: 'day'
-        }
-        }]
-      }
-    }
 
     return (
       <Container fluid>
@@ -105,7 +69,7 @@ class RecordComponent extends React.Component<RecordComponentProps, RecordCompon
           <Col>
             <div>
             <label>Time series balance (chart)</label>
-              <Line data={chartData} options={chartOptions}/>
+              <ChartComponent records={this.filterTimeSeries()} />
             </div>
             <label className="mt-5">Time series balance (table)</label>
             <div className="table-area">
@@ -173,6 +137,12 @@ class RecordComponent extends React.Component<RecordComponentProps, RecordCompon
       console.log('unsupported file type');
       return;
     }
+  }
+
+  filterTimeSeries() {
+    const threeMonthsAgo = moment().subtract(3, 'months');
+    return this.state.records.filter(({date}) => moment(date).isAfter(threeMonthsAgo))
+      .map(record => { return { t: record.date, y: record.balance }})
   }
 }
 

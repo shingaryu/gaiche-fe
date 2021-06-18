@@ -4,6 +4,7 @@ import TimeSeriesBalance from "../models/TimeSeriesBalance";
 import RecordApi from "../api/recordApi";
 import './recordComponent.css';
 import { ChartComponent } from "./chartComponent";
+import moment from "moment";
 
 type RecordComponentProps = {
 
@@ -68,7 +69,7 @@ class RecordComponent extends React.Component<RecordComponentProps, RecordCompon
           <Col>
             <div>
             <label>Time series balance (chart)</label>
-              <ChartComponent records={this.state.records.map(record => { return { t: record.date, y: record.balance }})} />
+              <ChartComponent records={this.filterTimeSeries()} />
             </div>
             <label className="mt-5">Time series balance (table)</label>
             <ListGroup>
@@ -134,6 +135,12 @@ class RecordComponent extends React.Component<RecordComponentProps, RecordCompon
       console.log('unsupported file type');
       return;
     }
+  }
+
+  filterTimeSeries() {
+    const threeMonthsAgo = moment().subtract(3, 'months');
+    return this.state.records.filter(({date}) => moment(date).isAfter(threeMonthsAgo))
+      .map(record => { return { t: record.date, y: record.balance }})
   }
 }
 

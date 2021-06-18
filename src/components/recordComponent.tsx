@@ -140,7 +140,7 @@ class RecordComponent extends React.Component<RecordComponentProps, RecordCompon
   }
 
   filterTimeSeries() {
-    const threeMonthsAgo = moment().subtract(3, 'months');
+    const threeMonthsAgo = moment().subtract(12, 'months');
     return this.state.records.filter(({date}) => moment(date).isAfter(threeMonthsAgo))
       .map(record => { return { t: record.date, y: record.balance }})
   }

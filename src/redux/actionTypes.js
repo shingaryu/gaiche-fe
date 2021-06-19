@@ -1,0 +1,1 @@
+export const SET_INITIAL_AMOUNT = "SET_INITIAL_AMOUNT";

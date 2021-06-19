@@ -5,13 +5,17 @@ import RecordApi from "../api/recordApi";
 import './recordComponent.css';
 import { ChartComponent } from "./chartComponent";
 import moment from "moment";
+import { connect } from "react-redux";
+import { getInitialAmount } from "../redux/selectors";
+import { setInitialAmount } from "../redux/actions";
 
 type RecordComponentProps = {
-
+  initialAmount: string,
+  setInitialAmount: (value: string) => void
 }
 
 type RecordComponentState = {
-  initialAmount: string;
+  // initialAmount: string;
   records: TimeSeriesBalance[];
   file: File | null;
 }
@@ -22,7 +26,8 @@ class RecordComponent extends React.Component<RecordComponentProps, RecordCompon
 
   constructor(props: RecordComponentProps) {
     super(props);
-    this.state = { initialAmount: '1127098', records: [], file: null };
+    // this.state = { initialAmount: '1127098', records: [], file: null };
+    this.state = { records: [], file: null };
     this.recordApi = new RecordApi();
     this.updateTimeSeries();
   }
@@ -44,7 +49,7 @@ class RecordComponent extends React.Component<RecordComponentProps, RecordCompon
             </Col>
             <Col md={2}>
               <Form.Label>Initial amount</Form.Label>
-              <Form.Control type="number" value={this.state.initialAmount} onChange={this.onInitialAmountChange} />
+              <Form.Control type="number" value={this.props.initialAmount} onChange={this.onInitialAmountChange} />
             </Col>
             <Col md={2} className="form-line">
               <Button variant="outline-success" onClick={this.onCurrencyAndInitialUpdate}>Update</Button>
@@ -91,7 +96,7 @@ class RecordComponent extends React.Component<RecordComponentProps, RecordCompon
   }
 
   updateTimeSeries() {
-    this.recordApi.getTimeSeriesBalanceAll('YEN', parseFloat(this.state.initialAmount)).then((data) => {
+    this.recordApi.getTimeSeriesBalanceAll('YEN', parseFloat(this.props.initialAmount)).then((data) => {
       this.setState( {records: data.data});
     }).catch(e => {
       console.log('recordApi.getTimeSeriesBalanceAll error ' + e)
@@ -99,7 +104,8 @@ class RecordComponent extends React.Component<RecordComponentProps, RecordCompon
   }
 
   onInitialAmountChange = (event: any) => {
-    this.setState({ initialAmount: event.target.value });
+    // this.setState({ initialAmount: event.target.value });
+    this.props.setInitialAmount(event.target.value);
   }
 
   onCurrencyAndInitialUpdate = (event: any) => {
@@ -146,4 +152,12 @@ class RecordComponent extends React.Component<RecordComponentProps, RecordCompon
   }
 }
 
-export default RecordComponent
+// export default RecordComponent
+const mapStateToProps = (state: any) => {
+  const initialAmount = getInitialAmount(state);
+  return { initialAmount };
+};
+export default connect(
+  mapStateToProps,
+  { setInitialAmount }
+)(RecordComponent);

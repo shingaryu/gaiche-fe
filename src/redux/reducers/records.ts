@@ -1,12 +1,19 @@
+import TimeSeriesBalance from "../../models/TimeSeriesBalance";
 import { SET_INITIAL_AMOUNT } from "../actionTypes";
 
-const initialState = {
+interface RecordsState {
+  initialAmount: string,
+  records: TimeSeriesBalance[],
+  file: File | null
+}
+
+const initialState: RecordsState = {
   initialAmount: '1127098',
   records: [],
   file: null
 };
 
-export default function(state = initialState, action) {
+export default function(state: RecordsState = initialState, action: any) {
   switch (action.type) {
     case SET_INITIAL_AMOUNT: {
       console.log('reducer set initial')
